@@ -13,7 +13,6 @@ import jp.co.seattle.library.dto.BookInfo;
 import jp.co.seattle.library.rowMapper.BookDetailsInfoRowMapper;
 import jp.co.seattle.library.rowMapper.BookInfoRowMapper;
 
-
 /**
  * 書籍サービス
  * 
@@ -47,7 +46,7 @@ public class BooksService {
 	 * @return 書籍情報
 	 */
 	public BookDetailsInfo getBookInfo(int bookId) {
-		String sql = "SELECT id, title, author, publisher, publish_date, isbn, description, thumbnail_url, thumbnail_name FROM books WHERE books.id = ? ORDER BY title ASC;";
+		String sql = "SELECT id, title, author, publisher, publish_date, isbn, description, thumbnail_name, thumbnail_url FROM books WHERE books.id = ? ORDER BY title ASC;";
 
 		BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper(), bookId);
 
@@ -90,12 +89,12 @@ public class BooksService {
 		String sql;
 		if (bookInfo.getThumbnailUrl() == null) {
 			// TODO 取得した書籍情報を更新するようにSQLを修正（タスク５）
-			sql = "";
+			sql = "UPDATE books SET title=? ,author=?, publisher=?, publish_date=?, isbn=?, description=? , upd_date=now() WHERE id=?;";
 			jdbcTemplate.update(sql, bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getPublisher(),
 					bookInfo.getPublishDate(), bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
 		} else {
 			// TODO 取得した書籍情報を更新するようにSQLを修正（タスク５）
-			sql = "";
+			sql = "UPDATE books SET title=?, author=?, publisher=?, publish_date=?, thumbnail_name=?, thumbnail_url=?, isbn=?, description=? , upd_date=now() WHERE id=?;";
 			jdbcTemplate.update(sql, bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getPublisher(),
 					bookInfo.getPublishDate(), bookInfo.getThumbnailName(), bookInfo.getThumbnailUrl(),
 					bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
